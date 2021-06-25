@@ -5,9 +5,25 @@
 
 struct EnHgo;
 
+typedef void (*EnHgoActionFunc)(struct EnHgo*, GlobalContext*);
+
 typedef struct EnHgo {
     /* 0x000 */ Actor actor;
-    /* 0x144 */ char unk_144[0x1D4];
+    /* 0x144 */ ColliderCylinder collider; // size = 0x4C
+    /* 0x190 */ SkelAnime skelAnime; // size = 0x44
+    /* 0x1D4 */ EnHgoActionFunc actionFunc;
+    /* 0x1D8 */ MtxF unk_1D8;
+    /* 0x218 */ s32 unk_218;
+    /* 0x21C */ Vec3s limbDrawTbl[19]; // size = 0x72
+    /* 0x28E */ Vec3s transitionDrawTbl[19]; // size = 0x72
+    /* 0x300 */ Vec3s unk_300;
+    /* 0x306 */ Vec3s unk_306;
+    /* 0x30C */ s16 unk_30C;
+    /* 0x30E */ s16 unk_30E;
+    /* 0x310 */ s16 unk_310;
+    /* 0x312 */ s16 unk_312;
+    /* 0x314 */ u16 unk_314;
+    /* 0x316 */ u16 unk_316;
 } EnHgo; // size = 0x318
 
 extern const ActorInit En_Hgo_InitVars;
