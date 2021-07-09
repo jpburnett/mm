@@ -112,7 +112,7 @@ void func_80BD0434(EnHgo* this, GlobalContext* globalCtx) {
     this->collider.dim.pos.x = this->actor.focus.pos.x;
     this->collider.dim.pos.y = this->actor.world.pos.y;
     this->collider.dim.pos.z = this->actor.focus.pos.z;
-    CollisionCheck_SetOC(globalCtx, &globalCtx->colCheckCtx, &this->collider);
+    CollisionCheck_SetOC(globalCtx, &globalCtx->colChkCtx, &this->collider);
 }
 
 void func_80BD049C(EnHgo* this) {
@@ -235,6 +235,79 @@ void func_80BD06FC(EnHgo* this, GlobalContext* globalCtx) {
 
 // TODO: Finish this one
 #pragma GLOBAL_ASM("./asm/non_matchings/overlays/ovl_En_Hgo_0x80BD02B0/func_80BD0898.asm")
+// s32 func_80BD0898(EnHgo* this, GlobalContext* globalCtx) {
+//     u32 sp44;
+//     u32 actionIndex;
+
+//     if (func_800EE29C(globalCtx, 0x1E6U) != 0) {
+//         actionIndex = func_800EE200(globalCtx, 0x1E6U);
+//         if (this->unk_316 != globalCtx->csCtx.npcActions[actionIndex]->startFrame) {
+//             this->unk_316 = globalCtx->csCtx.npcActions[actionIndex]->unk0;
+//             switch (globalCtx->csCtx.npcActions[actionIndex]->unk0) {
+//                 case 0:
+//                     this->unk_218 = 0;
+//                     func_800BDC5C(&this->skelAnime, D_80BD0EA0, 0);
+//                     goto block_23;
+//                 case 1:
+//                     this->actor.draw = EnHgo_Draw;
+//                     this->unk_218 = 1;
+//                     func_800BDC5C(&this->skelAnime, D_80BD0EA0, 1);
+//                     goto block_23;
+//                 case 2:
+//                     this->unk_218 = 2;
+//                     func_800BDC5C(&this->skelAnime, D_80BD0EA0, 2);
+//                     goto block_23;
+//                 case 3:
+//                     this->unk_218 = 3;
+//                     func_800BDC5C(&this->skelAnime, D_80BD0EA0, 3);
+//                     goto block_23;
+//                 case 4:
+//                     this->unk_218 = 4;
+//                     func_800BDC5C(&this->skelAnime, D_80BD0EA0, 4);
+//                     goto block_23;
+//                 case 5:
+//                     this->unk_218 = 5;
+//                     func_800BDC5C(&this->skelAnime, D_80BD0EA0, 5);
+//                     goto block_23;
+//             }
+//         } else {
+//             if (func_801378B8(&this->skelAnime, this->skelAnime.animFrameCount) != 0) {
+//                 if (this->unk_218 != 1) {
+//                     if (this->unk_218 != 2) {
+//                         if (this->unk_218 != 5) {
+
+//                         } else {
+//                             this->unk_218 = 6;
+//                             func_800BDC5C(&this->skelAnime, D_80BD0EA0, 6);
+//                         }
+//                     } else {
+//                         this->unk_218 = 3;
+//                         func_800BDC5C(&this->skelAnime, D_80BD0EA0, 3);
+//                     }
+//                 } else if ((func_801378B8(&this->skelAnime, this->skelAnime.animFrameCount) != 0) &&
+//                            (this->unk_312 == 0)) {
+//                     this->unk_312 = 1;
+//                     if ((gSaveContext.sceneSetupIndex == 0) &&
+//                         ((globalCtx->csCtx.unk_12 == 2) || globalCtx->csCtx.unk_12 == 4)) {
+//                         Audio_PlayActorSound2(&this->actor, 0x6961U);
+//                     }
+//                 }
+//             }
+//         }
+//     block_23:
+//         func_800EDF24(&this->actor, globalCtx, sp44);
+//         return 1;
+//     }
+//     if ((globalCtx->csCtx.state == 0) && (((gSaveContext.weekEventReg[50]) & 0x20) != 0) &&
+//         (func_80BD0410 == this->actionFunc)) {
+//         this->actor.shape.rot.y = this->actor.world.rot.y;
+//         Actor_Spawn(&globalCtx->actorCtx, globalCtx, 0xC6, this->actor.focus.pos.x, this->actor.focus.pos.y,
+//                     this->actor.focus.pos.z, 7, 0, 0, 0x7F5A);
+//         func_80BD0420(this);
+//     }
+//     this->unk_316 = 0x63;
+//     return 0;
+// }
 
 void func_80BD0B8C(EnHgo* this, GlobalContext* globalCtx) {
     func_800E9250(globalCtx, &this->actor, &this->unk_300, &this->unk_306, this->actor.focus.pos);
@@ -264,7 +337,7 @@ void EnHgo_Update(Actor* thisx, GlobalContext* globalCtx) {
         if (this->actionFunc != func_80BD0410) {
             if (this->actionFunc != func_80BD0434) {
                 Collider_UpdateCylinder(this, &this->collider);
-                CollisionCheck_SetOC(globalCtx, &globalCtx->colCheckCtx, &this->collider);
+                CollisionCheck_SetOC(globalCtx, &globalCtx->colChkCtx, &this->collider);
                 func_80BD0B8C(this, globalCtx);
             }
         }
