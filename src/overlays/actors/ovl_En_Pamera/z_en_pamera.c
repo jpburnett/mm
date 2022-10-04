@@ -17,7 +17,7 @@ void EnPamera_Destroy(Actor* thisx, PlayState* play);
 void EnPamera_Update(Actor* thisx, PlayState* play);
 void EnPamera_Draw(Actor* thisx, PlayState* play);
 
-s32 func_80BD84F0(EnPamera* this, PlayState* play);
+s32 EnPamera_FindDoor(EnPamera* this, PlayState* play);
 void func_80BD8588(EnPamera* this, PlayState* play);
 void func_80BD8658(EnPamera* this);
 void func_80BD8700(EnPamera* this);
@@ -36,10 +36,10 @@ void EnPamera_LookDownWell(EnPamera* this);
 void func_80BD8F60(EnPamera* this, PlayState* play);
 void func_80BD8FF0(EnPamera* this);
 void func_80BD909C(EnPamera* this, PlayState* play);
-s32 func_80BD9234(EnPamera* this, PlayState* play);
+s32 EnPamera_DetectBomb(EnPamera* this, PlayState* play);
 void func_80BD92D0(EnPamera* this, PlayState* play);
 void func_80BD9338(EnPamera* this, PlayState* play);
-void func_80BD9384(EnPamera* this, PlayState* play);
+void EnPamera_UpdateEyes(EnPamera* this, PlayState* play);
 void EnPamera_SetEyebrowAndMouthTex(EnPamera* this, s16 eyebrowTexIndex, s16 mouthTexIndex);
 void func_80BD93F4(EnPamera* this, PlayState* play);
 void func_80BD94E0(EnPamera* this, PlayState* play);
@@ -147,7 +147,7 @@ void EnPamera_Init(Actor* thisx, PlayState* play) {
     this->blinkTimer = 0;
     this->hideInisdeTimer = 0;
     this->unk_322 = 0;
-    this->unk_324 = 0;
+    this->textId = 0;
     if ((this->actor.params & 0xF000) >> 0xC) {
         func_80BD9840(this, play);
     } else {
@@ -180,7 +180,7 @@ void EnPamera_Init(Actor* thisx, PlayState* play) {
     }
 }
 
-s32 func_80BD84F0(EnPamera* this, PlayState* play) {
+s32 EnPamera_FindDoor(EnPamera* this, PlayState* play) {
     Actor* actor = play->actorCtx.actorLists[ACTORCAT_DOOR].first;
 
     while (actor != NULL) {
@@ -267,7 +267,7 @@ void func_80BD8758(EnPamera* this, PlayState* play) {
             this->actor.draw = NULL;
         }
     }
-    if (func_80BD9234(this, play)) {
+    if (EnPamera_DetectBomb(this, play)) {
         // this is 1760 frames, which is ~90sec
         this->hideInisdeTimer = 88 * 20;
     }
@@ -440,18 +440,18 @@ void func_80BD90AC(EnPamera* this, PlayState* play) {
     }
 }
 
-s32 func_80BD9234(EnPamera* this, PlayState* play) {
+s32 EnPamera_DetectBomb(EnPamera* this, PlayState* play) {
     Actor* actor = play->actorCtx.actorLists[ACTORCAT_EXPLOSIVES].first;
 
     while (actor != NULL) {
         if ((actor->id == ACTOR_EN_BOM) && (Math_Vec3f_DistXZ(&this->actor.world.pos, &actor->world.pos) < 500.0f) &&
             (((EnBom*)actor)->timer == 0)) {
-            return 1;
+            return true;
         } else {
             actor = actor->next;
         }
     }
-    return 0;
+    return false;
 }
 
 void func_80BD92D0(EnPamera* this, PlayState* play) {
@@ -470,14 +470,14 @@ void func_80BD92D0(EnPamera* this, PlayState* play) {
 void func_80BD9338(EnPamera* this, PlayState* play) {
     Actor* actor;
 
-    func_80BD84F0(this, play);
+    EnPamera_FindDoor(this, play);
     actor = this->actor.child;
     if ((actor != NULL) && (actor->id == ACTOR_EN_DOOR)) {
         ((EnDoor*)actor)->unk_1A7 = -0x32;
     }
 }
 
-void func_80BD9384(EnPamera* this, PlayState* play) {
+void EnPamera_UpdateEyes(EnPamera* this, PlayState* play) {
     if (this->blinkTimer < 40) {
         this->blinkTimer++;
     } else {
@@ -525,7 +525,7 @@ void EnPamera_Update(Actor* thisx, PlayState* play) {
     this->actionFunc(this, play);
     SkelAnime_Update(&this->skelAnime);
     func_80BD90AC(this, play);
-    func_80BD9384(this, play);
+    EnPamera_UpdateEyes(this, play);
     func_80BD94E0(this, play);
     Collider_UpdateCylinder(&this->actor, &this->collider);
     CollisionCheck_SetOC(play, &play->colChkCtx, &this->collider.base);
@@ -601,20 +601,20 @@ void func_80BD994C(EnPamera* this, PlayState* play) {
             EnPamera_SetEyebrowAndMouthTex(this, 0, 1);
             Message_StartTextbox(play, 0x15A8, &this->actor);
 
-            this->unk_324 = 0x15A8;
+            this->textId = 0x15A8;
         } else if ((gSaveContext.save.playerForm != PLAYER_FORM_HUMAN) ||
                    ((gSaveContext.save.weekEventReg[52] & 0x20) && (!(gSaveContext.save.weekEventReg[75] & 0x20)))) {
             EnPamera_SetEyebrowAndMouthTex(this, 1, 0);
             Message_StartTextbox(play, 0x158E, &this->actor);
-            this->unk_324 = 0x158E;
+            this->textId = 0x158E;
         } else {
             if (!(this->unk_322 & 1)) {
                 this->unk_322 |= 1;
                 Message_StartTextbox(play, 0x1587, &this->actor);
-                this->unk_324 = 0x1587;
+                this->textId = 0x1587;
             } else {
                 Message_StartTextbox(play, 0x158C, &this->actor);
-                this->unk_324 = 0x158C;
+                this->textId = 0x158C;
             }
         }
         func_80BD9A9C(this);
@@ -655,26 +655,26 @@ void EnPamera_HandleDialogue(EnPamera* this, PlayState* play) {
 
 void func_80BD9B4C(EnPamera* this, PlayState* play) {
     if (Message_ShouldAdvance(play)) {
-        switch (this->unk_324) {
+        switch (this->textId) {
             case 0x1587:
                 Message_StartTextbox(play, 0x1588, &this->actor);
-                this->unk_324 = 0x1588;
+                this->textId = 0x1588;
                 break;
             case 0x1588:
                 Message_StartTextbox(play, 0x1589, &this->actor);
-                this->unk_324 = 0x1589;
+                this->textId = 0x1589;
                 break;
             case 0x1589:
                 Message_StartTextbox(play, 0x158A, &this->actor);
-                this->unk_324 = 0x158A;
+                this->textId = 0x158A;
                 break;
             case 0x158A:
                 Message_StartTextbox(play, 0x158B, &this->actor);
-                this->unk_324 = 0x158B;
+                this->textId = 0x158B;
                 break;
             case 0x158C:
                 Message_StartTextbox(play, 0x158D, &this->actor);
-                this->unk_324 = 0x158D;
+                this->textId = 0x158D;
                 break;
             case 0x158E:
             case 0x15A8:
@@ -850,7 +850,7 @@ void func_80BDA344(Actor* thisx, PlayState* play) {
 
     this->actionFunc(this, play);
     SkelAnime_Update(&this->skelAnime);
-    func_80BD9384(this, play);
+    EnPamera_UpdateEyes(this, play);
     if (func_80BD9CB8(this, play)) {
         // Pamela is outside
         if (gSaveContext.save.weekEventReg[59] & 1) {

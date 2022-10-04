@@ -14,6 +14,11 @@ typedef enum {
     /* 1 */ MOUTH_OPEN
 } mouthTexState;
 
+typedef enum {
+    /* 0 */ EYEBROWS_HAPPY,
+    /* 1 */ EYEBROWS_ANGRY,
+} eyebrowTexState;
+
 typedef struct EnPamera {
     /* 0x000 */ Actor actor;
     /* 0x144 */ ColliderCylinder collider;
@@ -38,7 +43,7 @@ typedef struct EnPamera {
     /* 0x31E */ s16 unk_31E;
     /* 0x320 */ UNK_TYPE1 unk_320[0x2];
     /* 0x322 */ s16 unk_322;
-    /* 0x324 */ u16 unk_324;
+    /* 0x324 */ u16 textId;
     /* 0x326 */ u16 unk_326;
 } EnPamera; // size = 0x328
 
