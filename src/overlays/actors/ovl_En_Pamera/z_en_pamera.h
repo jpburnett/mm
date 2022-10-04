@@ -9,6 +9,11 @@ struct EnPamera;
 typedef void (*EnPameraActionFunc)(struct EnPamera*, PlayState*);
 typedef void (*EnPameraSetupFunc)(struct EnPamera*, PlayState*);
 
+typedef enum {
+    /* 0 */ MOUTH_CLOSED,
+    /* 1 */ MOUTH_OPEN
+} mouthTexState;
+
 typedef struct EnPamera {
     /* 0x000 */ Actor actor;
     /* 0x144 */ ColliderCylinder collider;
@@ -24,10 +29,10 @@ typedef struct EnPamera {
     /* 0x27A */ Vec3s morphTable[PAMELA_LIMB_MAX];
     /* 0x304 */ Vec3s headRot;
     /* 0x30A */ Vec3s torsoRot; // Set, but not used
-    /* 0x310 */ s16 unk_310;
-    /* 0x312 */ s16 unk_312;
-    /* 0x314 */ s16 unk_314;
-    /* 0x316 */ s16 unk_316;
+    /* 0x310 */ s16 eyebrowTexIndex;
+    /* 0x312 */ s16 eyeTexIndex;
+    /* 0x314 */ s16 mouthTexIndex;
+    /* 0x316 */ s16 blinkTimer;
     /* 0x318 */ s16 cutscenes[2];
     /* 0x31C */ s16 hideInisdeTimer;
     /* 0x31E */ s16 unk_31E;

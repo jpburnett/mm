@@ -1,6 +1,6 @@
 ﻿<Root>
     <File Name="object_pamera" Segment="6">
-        <Animation Name="object_pamera_Anim_0005BC" Offset="0x5BC" />
+        <Animation Name="gPamelaIdleAnim" Offset="0x5BC" />
 
         <DList Name="gPamelaAbdomenDL" Offset="0x2E50" />
         <DList Name="gPamelaPelvisDL" Offset="0x2FB8" />
@@ -28,11 +28,11 @@
         <Texture Name="object_pamera_Tex_0063E8" OutName="tex_0063E8" Format="ci8" Width="16" Height="16" Offset="0x63E8" />
         <Texture Name="object_pamera_Tex_0064E8" OutName="tex_0064E8" Format="ci8" Width="16" Height="16" Offset="0x64E8" />
         <Texture Name="object_pamera_Tex_0065E8" OutName="tex_0065E8" Format="ci8" Width="16" Height="16" Offset="0x65E8" />
-        <Texture Name="object_pamera_Tex_0066E8" OutName="tex_0066E8" Format="ci8" Width="32" Height="32" Offset="0x66E8" />
-        <Texture Name="object_pamera_Tex_006AE8" OutName="tex_006AE8" Format="ci8" Width="32" Height="32" Offset="0x6AE8" />
-        <Texture Name="object_pamera_Tex_006EE8" OutName="tex_006EE8" Format="ci8" Width="32" Height="32" Offset="0x6EE8" />
-        <Texture Name="object_pamera_Tex_0072E8" OutName="tex_0072E8" Format="ci8" Width="16" Height="16" Offset="0x72E8" />
-        <Texture Name="object_pamera_Tex_0073E8" OutName="tex_0073E8" Format="ci8" Width="16" Height="16" Offset="0x73E8" />
+        <Texture Name="gPamelaEyeOpenTex" OutName="tex_0066E8" Format="ci8" Width="32" Height="32" Offset="0x66E8" />
+        <Texture Name="gPamelaEyeHalfTex" OutName="tex_006AE8" Format="ci8" Width="32" Height="32" Offset="0x6AE8" />
+        <Texture Name="gPamelaEyeClosedTex" OutName="tex_006EE8" Format="ci8" Width="32" Height="32" Offset="0x6EE8" />
+        <Texture Name="gPamelaMouthClosedTex" OutName="pamela_mouth_closed_tex" Format="ci8" Width="16" Height="16" Offset="0x72E8" />
+        <Texture Name="gPamelaMouthOpenTex" OutName="pamela_mouth_open_tex" Format="ci8" Width="16" Height="16" Offset="0x73E8" />
         <Texture Name="object_pamera_Tex_0074E8" OutName="tex_0074E8" Format="ci8" Width="32" Height="32" Offset="0x74E8" />
         <Texture Name="object_pamera_Tex_0078E8" OutName="tex_0078E8" Format="ci8" Width="32" Height="32" Offset="0x78E8" />
         <Texture Name="object_pamera_Tex_007CE8" OutName="tex_007CE8" Format="ci8" Width="16" Height="16" Offset="0x7CE8" />
@@ -65,17 +65,17 @@
         <Limb Name="gPamelaPelvisLimb" Type="Standard" EnumName="PAMELA_LIMB_PELVIS" Offset="0x83E4" />
         <Skeleton Name="gPamelaSkel" Type="Flex" LimbType="Standard" LimbNone="PAMELA_LIMB_NONE" LimbMax="PAMELA_LIMB_MAX" EnumName="PamelaLimb" Offset="0x8448" />
         
-        <Animation Name="object_pamera_Anim_008AE0" Offset="0x8AE0" /> <!-- Pamela Walking -->
-        <Animation Name="object_pamera_Anim_008E38" Offset="0x8E38" />
-        <Animation Name="object_pamera_Anim_009870" Offset="0x9870" />
-        <Animation Name="object_pamera_Anim_009F54" Offset="0x9F54" /> <!-- HoldBack En_Hgo -->
-        <Animation Name="object_pamera_Anim_00A844" Offset="0xA844" /> <!-- Pamela Looking down the well -->
+        <Animation Name="gPamelaWalkAnim" Offset="0x8AE0" /> <!-- Pamela Walking -->
+        <Animation Name="gPamelaRunAnim" Offset="0x8E38" />
+        <Animation Name="gRunInFrontOfGibdoDadAnim" Offset="0x9870" />
+        <Animation Name="gDefendGibdoDadAnim" Offset="0x9F54" />
+        <Animation Name="gObserveDownAnim" Offset="0xA844" /> <!-- Pamela Looking down the well -->
         <Animation Name="object_pamera_Anim_00B0C4" Offset="0xB0C4" />
-        <Animation Name="object_pamera_Anim_00B5B0" Offset="0xB5B0" /> <!-- PushBack En_Hgo -->
-        <Animation Name="object_pamera_Anim_00BCC4" Offset="0xBCC4" /> <!-- Defend En_Hgo -->
-        <Animation Name="object_pamera_Anim_00C9F4" Offset="0xC9F4" />
-        <Animation Name="object_pamera_Anim_00D0F0" Offset="0xD0F0" />
-        <Animation Name="object_pamera_Anim_00D9DC" Offset="0xD9DC" />
-        <Animation Name="object_pamera_Anim_00E16C" Offset="0xE16C" /> <!-- Hugging En_Hg -->
+        <Animation Name="gPushBackGibdoDadAnim" Offset="0xB5B0" />
+        <Animation Name="gDefendAndShakeHeadAnim" Offset="0xBCC4" />
+        <Animation Name="gPamelaRunIntoBeingTossedAnim" Offset="0xC9F4" />
+        <Animation Name="gPamelaTossedInAirAnim" Offset="0xD0F0" />
+        <Animation Name="gPamelaRunAndHugFatherAnim" Offset="0xD9DC" />
+        <Animation Name="gPamelaHuggingAnim" Offset="0xE16C" /> <!-- Hugging En_Hg -->
     </File>
 </Root>

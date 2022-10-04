@@ -40,7 +40,7 @@ s32 func_80BD9234(EnPamera* this, PlayState* play);
 void func_80BD92D0(EnPamera* this, PlayState* play);
 void func_80BD9338(EnPamera* this, PlayState* play);
 void func_80BD9384(EnPamera* this, PlayState* play);
-void func_80BD93CC(EnPamera* this, s16 arg1, s16 arg2);
+void EnPamera_SetEyebrowAndMouthTex(EnPamera* this, s16 eyebrowTexIndex, s16 mouthTexIndex);
 void func_80BD93F4(EnPamera* this, PlayState* play);
 void func_80BD94E0(EnPamera* this, PlayState* play);
 void func_80BD9840(EnPamera* this, PlayState* play);
@@ -106,28 +106,28 @@ static CollisionCheckInfoInit2 sColChkInfoInit2 = {
 };
 
 static AnimationInfo sAnimationInfo[] = {
-    { &object_pamera_Anim_0005BC, 1.0f, 0, 0.0f, ANIMMODE_LOOP, -4.0f },
-    { &object_pamera_Anim_008AE0, 1.0f, 0, 0.0f, ANIMMODE_LOOP, -4.0f },
-    { &object_pamera_Anim_008E38, 1.0f, 0, 0.0f, ANIMMODE_LOOP, -4.0f },
-    { &object_pamera_Anim_00A844, 1.0f, 0, 0.0f, ANIMMODE_LOOP, -4.0f },
+    { &gPamelaIdleAnim, 1.0f, 0, 0.0f, ANIMMODE_LOOP, -4.0f },
+    { &gPamelaWalkAnim, 1.0f, 0, 0.0f, ANIMMODE_LOOP, -4.0f },
+    { &gPamelaRunAnim, 1.0f, 0, 0.0f, ANIMMODE_LOOP, -4.0f },
+    { &gObserveDownAnim, 1.0f, 0, 0.0f, ANIMMODE_LOOP, -4.0f },
     { &object_pamera_Anim_00B0C4, 1.0f, 0, 0.0f, ANIMMODE_LOOP, -4.0f },
-    { &object_pamera_Anim_009870, 1.0f, 0, 0.0f, ANIMMODE_LOOP, 0.0f },
-    { &object_pamera_Anim_009F54, 1.0f, 0, 0.0f, ANIMMODE_LOOP, 0.0f },
-    { &object_pamera_Anim_00B5B0, 1.0f, 0, 0.0f, ANIMMODE_LOOP, 0.0f },
-    { &object_pamera_Anim_00BCC4, 1.0f, 0, 0.0f, ANIMMODE_LOOP, 0.0f },
-    { &object_pamera_Anim_00D9DC, 1.0f, 0, 0.0f, ANIMMODE_LOOP, 0.0f },
-    { &object_pamera_Anim_00E16C, 1.0f, 0, 0.0f, ANIMMODE_LOOP, 0.0f },
-    { &object_pamera_Anim_00C9F4, 1.0f, 0, 0.0f, ANIMMODE_ONCE, 0.0f },
-    { &object_pamera_Anim_00D0F0, 1.0f, 0, 0.0f, ANIMMODE_LOOP, 0.0f },
+    { &gRunInFrontOfGibdoDadAnim, 1.0f, 0, 0.0f, ANIMMODE_LOOP, 0.0f },
+    { &gDefendGibdoDadAnim, 1.0f, 0, 0.0f, ANIMMODE_LOOP, 0.0f },
+    { &gPushBackGibdoDadAnim, 1.0f, 0, 0.0f, ANIMMODE_LOOP, 0.0f },
+    { &gDefendAndShakeHeadAnim, 1.0f, 0, 0.0f, ANIMMODE_LOOP, 0.0f },
+    { &gPamelaRunAndHugFatherAnim, 1.0f, 0, 0.0f, ANIMMODE_LOOP, 0.0f },
+    { &gPamelaHuggingAnim, 1.0f, 0, 0.0f, ANIMMODE_LOOP, 0.0f },
+    { &gPamelaRunIntoBeingTossedAnim, 1.0f, 0, 0.0f, ANIMMODE_ONCE, 0.0f },
+    { &gPamelaTossedInAirAnim, 1.0f, 0, 0.0f, ANIMMODE_LOOP, 0.0f },
 };
 
 static Vec3f D_80BDA5F0 = { 1000.0f, 0.0f, 0.0f };
 
-static TexturePtr D_80BDA5FC[] = { object_pamera_Tex_0074E8, object_pamera_Tex_0078E8 };
+static TexturePtr sEyebrowTextures[] = { object_pamera_Tex_0074E8, object_pamera_Tex_0078E8 };
 
-static TexturePtr D_80BDA604[] = { object_pamera_Tex_0066E8, object_pamera_Tex_006AE8, object_pamera_Tex_006EE8 };
+static TexturePtr sEyeTextures[] = { gPamelaEyeOpenTex, gPamelaEyeHalfTex, gPamelaEyeClosedTex };
 
-static TexturePtr D_80BDA610[] = { object_pamera_Tex_0072E8, object_pamera_Tex_0073E8 };
+static TexturePtr sMouthTextures[] = { gPamelaMouthClosedTex, gPamelaMouthOpenTex };
 
 void EnPamera_Init(Actor* thisx, PlayState* play) {
     s32 pad;
@@ -135,16 +135,16 @@ void EnPamera_Init(Actor* thisx, PlayState* play) {
     Vec3f sp44;
 
     ActorShape_Init(&this->actor.shape, 0.0f, ActorShadow_DrawCircle, 15.0f);
-    SkelAnime_InitFlex(play, &this->skelAnime, &gPamelaSkel, &object_pamera_Anim_0005BC, this->jointTable,
+    SkelAnime_InitFlex(play, &this->skelAnime, &gPamelaSkel, &gPamelaIdleAnim, this->jointTable,
                        this->morphTable, PAMELA_LIMB_MAX);
     Collider_InitCylinder(play, &this->collider);
     Collider_SetCylinder(play, &this->collider, &this->actor, &sCylinderInit);
     CollisionCheck_SetInfo2(&this->actor.colChkInfo, NULL, &sColChkInfoInit2);
     this->actor.targetMode = 6;
-    this->unk_312 = 0;
-    this->unk_310 = 0;
-    this->unk_314 = 0;
-    this->unk_316 = 0;
+    this->eyeTexIndex = 0;
+    this->eyebrowTexIndex = 0;
+    this->mouthTexIndex = 0;
+    this->blinkTimer = 0;
     this->hideInisdeTimer = 0;
     this->unk_322 = 0;
     this->unk_324 = 0;
@@ -385,7 +385,7 @@ void func_80BD8DB0(EnPamera* this, PlayState* play) {
 }
 
 void EnPamera_LookDownWell(EnPamera* this) {
-    func_80BD93CC(this, 1, 1);
+    EnPamera_SetEyebrowAndMouthTex(this, 1, MOUTH_OPEN);
     Actor_ChangeAnimationByInfo(&this->skelAnime, sAnimationInfo, 4);
     this->actionFunc = func_80BD8F60;
 }
@@ -395,7 +395,7 @@ void func_80BD8F60(EnPamera* this, PlayState* play) {
     if (Animation_OnFrame(&this->skelAnime, this->skelAnime.endFrame)) {
         Actor_ChangeAnimationByInfo(&this->skelAnime, sAnimationInfo, 2);
         this->actor.speedXZ = 3.0f;
-        func_80BD93CC(this, 0, 0);
+        EnPamera_SetEyebrowAndMouthTex(this, 0, MOUTH_CLOSED);
         func_80BD8D80(this);
     }
 }
@@ -478,30 +478,30 @@ void func_80BD9338(EnPamera* this, PlayState* play) {
 }
 
 void func_80BD9384(EnPamera* this, PlayState* play) {
-    if (this->unk_316 < 40) {
-        this->unk_316++;
+    if (this->blinkTimer < 40) {
+        this->blinkTimer++;
     } else {
-        this->unk_312++;
-        if (this->unk_312 >= 3) {
-            this->unk_312 = 0;
-            this->unk_316 = 0;
+        this->eyeTexIndex++;
+        if (this->eyeTexIndex >= 3) {
+            this->eyeTexIndex = 0;
+            this->blinkTimer = 0;
         }
     }
 }
 
-void func_80BD93CC(EnPamera* this, s16 arg1, s16 arg2) {
-    this->unk_310 = arg1;
-    this->unk_314 = arg2;
+void EnPamera_SetEyebrowAndMouthTex(EnPamera* this, s16 eyebrowTexIndex, s16 mouthTexIndex) {
+    this->eyebrowTexIndex = eyebrowTexIndex;
+    this->mouthTexIndex = mouthTexIndex;
 }
 
 void func_80BD93F4(EnPamera* this, PlayState* play) {
     if ((this->actionFunc == func_80BD8B70) || (this->actionFunc == func_80BD8DB0) ||
         (this->actionFunc == func_80BD8964) || (this->actionFunc == func_80BD8A7C)) {
-        if (this->skelAnime.animation == &object_pamera_Anim_008AE0) {
+        if (this->skelAnime.animation == &gPamelaWalkAnim) {
             if (Animation_OnFrame(&this->skelAnime, 9.0f) || Animation_OnFrame(&this->skelAnime, 18.0f)) {
                 Actor_PlaySfxAtPos(&this->actor, NA_SE_EV_PAMERA_WALK);
             }
-        } else if ((this->skelAnime.animation == &object_pamera_Anim_008E38) &&
+        } else if ((this->skelAnime.animation == &gPamelaRunAnim) &&
                    (Animation_OnFrame(&this->skelAnime, 2.0f) || Animation_OnFrame(&this->skelAnime, 6.0f))) {
             Actor_PlaySfxAtPos(&this->actor, NA_SE_EV_PAMERA_WALK);
         }
@@ -555,9 +555,9 @@ void EnPamera_Draw(Actor* thisx, PlayState* play) {
 
     OPEN_DISPS(play->state.gfxCtx);
     func_8012C28C(play->state.gfxCtx);
-    gSPSegment(POLY_OPA_DISP++, 0x08, SEGMENTED_TO_VIRTUAL(D_80BDA604[this->unk_312]));
-    gSPSegment(POLY_OPA_DISP++, 0x09, SEGMENTED_TO_VIRTUAL(D_80BDA610[this->unk_314]));
-    gSPSegment(POLY_OPA_DISP++, 0x0A, SEGMENTED_TO_VIRTUAL(D_80BDA5FC[this->unk_310]));
+    gSPSegment(POLY_OPA_DISP++, 0x08, SEGMENTED_TO_VIRTUAL(sEyeTextures[this->eyeTexIndex]));
+    gSPSegment(POLY_OPA_DISP++, 0x09, SEGMENTED_TO_VIRTUAL(sMouthTextures[this->mouthTexIndex]));
+    gSPSegment(POLY_OPA_DISP++, 0x0A, SEGMENTED_TO_VIRTUAL(sEyebrowTextures[this->eyebrowTexIndex]));
     SkelAnime_DrawFlexOpa(play, this->skelAnime.skeleton, this->skelAnime.jointTable, this->skelAnime.dListCount,
                           EnPamera_OverrideLimbDraw, EnPamera_PostLimbDraw, &this->actor);
     CLOSE_DISPS(play->state.gfxCtx);
@@ -598,13 +598,13 @@ void func_80BD994C(EnPamera* this, PlayState* play) {
     if (Actor_ProcessTalkRequest(&this->actor, &play->state)) {
         if (Player_GetMask(play) == PLAYER_MASK_GIBDO) {
             if (1) {}
-            func_80BD93CC(this, 0, 1);
+            EnPamera_SetEyebrowAndMouthTex(this, 0, 1);
             Message_StartTextbox(play, 0x15A8, &this->actor);
 
             this->unk_324 = 0x15A8;
         } else if ((gSaveContext.save.playerForm != PLAYER_FORM_HUMAN) ||
                    ((gSaveContext.save.weekEventReg[52] & 0x20) && (!(gSaveContext.save.weekEventReg[75] & 0x20)))) {
-            func_80BD93CC(this, 1, 0);
+            EnPamera_SetEyebrowAndMouthTex(this, 1, 0);
             Message_StartTextbox(play, 0x158E, &this->actor);
             this->unk_324 = 0x158E;
         } else {
@@ -759,7 +759,7 @@ void func_80BD9ED0(EnPamera* this, PlayState* play) {
 
 void func_80BD9EE0(EnPamera* this) {
     Actor_ChangeAnimationByInfo(&this->skelAnime, sAnimationInfo, 5);
-    func_80BD93CC(this, 1, 0);
+    EnPamera_SetEyebrowAndMouthTex(this, 1, 0);
     this->unk_31E = 1;
     this->setupFunc = func_80BD9F3C;
 }
@@ -774,14 +774,14 @@ void func_80BD9F3C(EnPamera* this, PlayState* play) {
         }
         if (Animation_OnFrame(&this->skelAnime, this->skelAnime.endFrame)) {
             this->unk_31E = 0;
-            func_80BD93CC(this, 0, 0);
+            EnPamera_SetEyebrowAndMouthTex(this, 0, 0);
             Actor_ChangeAnimationByInfo(&this->skelAnime, sAnimationInfo, 6);
         }
     }
 }
 
 void func_80BDA038(EnPamera* this) {
-    func_80BD93CC(this, 0, 1);
+    EnPamera_SetEyebrowAndMouthTex(this, 0, 1);
     Actor_ChangeAnimationByInfo(&this->skelAnime, sAnimationInfo, 7);
     this->unk_31E = 0;
     this->setupFunc = func_80BDA090;
@@ -791,7 +791,7 @@ void func_80BDA090(EnPamera* this, PlayState* play) {
 }
 
 void func_80BDA0A0(EnPamera* this) {
-    func_80BD93CC(this, 0, 1);
+    EnPamera_SetEyebrowAndMouthTex(this, 0, 1);
     Actor_ChangeAnimationByInfo(&this->skelAnime, sAnimationInfo, 8);
     this->unk_31E = 1;
     this->setupFunc = func_80BDA0FC;
@@ -801,7 +801,7 @@ void func_80BDA0FC(EnPamera* this, PlayState* play) {
     if (this->unk_31E == 1) {
         if (Animation_OnFrame(&this->skelAnime, this->skelAnime.endFrame)) {
             this->unk_31E = 0;
-            func_80BD93CC(this, 0, 0);
+            EnPamera_SetEyebrowAndMouthTex(this, 0, 0);
             Actor_ChangeAnimationByInfo(&this->skelAnime, sAnimationInfo, 6);
         }
     }
@@ -809,7 +809,7 @@ void func_80BDA0FC(EnPamera* this, PlayState* play) {
 
 void func_80BDA170(EnPamera* this) {
     this->unk_31E = 1;
-    func_80BD93CC(this, 0, 1);
+    EnPamera_SetEyebrowAndMouthTex(this, 0, 1);
     Actor_ChangeAnimationByInfo(&this->skelAnime, sAnimationInfo, 9);
     this->setupFunc = func_80BDA1C8;
 }
@@ -822,7 +822,7 @@ void func_80BDA1C8(EnPamera* this, PlayState* play) {
         }
         if (Animation_OnFrame(&this->skelAnime, this->skelAnime.endFrame)) {
             this->unk_31E = 0;
-            func_80BD93CC(this, 0, 0);
+            EnPamera_SetEyebrowAndMouthTex(this, 0, 0);
             Actor_ChangeAnimationByInfo(&this->skelAnime, sAnimationInfo, 10);
         }
     }
@@ -830,7 +830,7 @@ void func_80BDA1C8(EnPamera* this, PlayState* play) {
 
 void func_80BDA288(EnPamera* this) {
     this->unk_31E = 1;
-    func_80BD93CC(this, 0, 0);
+    EnPamera_SetEyebrowAndMouthTex(this, 0, 0);
     Actor_ChangeAnimationByInfo(&this->skelAnime, sAnimationInfo, 11);
     this->setupFunc = func_80BDA2E0;
 }

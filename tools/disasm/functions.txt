@@ -15909,7 +15909,7 @@
     0x80BD92D0:("func_80BD92D0",),
     0x80BD9338:("func_80BD9338",),
     0x80BD9384:("func_80BD9384",),
-    0x80BD93CC:("func_80BD93CC",),
+    0x80BD93CC:("EnPamera_SetEyebrowAndMouthTex",),
     0x80BD93F4:("func_80BD93F4",),
     0x80BD94E0:("func_80BD94E0",),
     0x80BD95A4:("EnPamera_Update",),
