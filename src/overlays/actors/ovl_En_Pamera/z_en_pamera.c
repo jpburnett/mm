@@ -123,7 +123,7 @@ static AnimationInfo sAnimationInfo[] = {
 
 static Vec3f D_80BDA5F0 = { 1000.0f, 0.0f, 0.0f };
 
-static TexturePtr sEyebrowTextures[] = { object_pamera_Tex_0074E8, object_pamera_Tex_0078E8 };
+static TexturePtr sEyebrowTextures[] = { gPamelaWorriedEyebrows, gPamelaAngryEyebrows };
 
 static TexturePtr sEyeTextures[] = { gPamelaEyeOpenTex, gPamelaEyeHalfTex, gPamelaEyeClosedTex };
 
