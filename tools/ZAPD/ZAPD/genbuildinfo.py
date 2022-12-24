@@ -1,15 +1,21 @@
 #!/usr/bin/python3
-
+import os.path
 import argparse
 from datetime import datetime
 import getpass
 import subprocess
 
 parser = argparse.ArgumentParser()
+parser.add_argument("--opath", dest="opath", type=str, required=False)
 parser.add_argument("--devel", action="store_true")
 args = parser.parse_args()
 
-with open("build/ZAPD/BuildInfo.cpp", "w+") as buildFile:
+if args.opath:
+  ofile = os.path.join(args.opath, "BuildInfo.cpp")
+else:
+  ofile = "build/ZAPD/BuildInfo.cpp"
+
+with open(ofile, "w+") as buildFile:
     label = subprocess.check_output(["git", "describe", "--always"]).strip().decode("utf-8")
     now = datetime.now()
     if args.devel:
